@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>가위바위보 게임</title>
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: linear-gradient(to bottom, #fff, #e0e0e0); /* 부드러운 흰색 토너먼트 배경 */
+        }
+        .game-container {
+            text-align: center;
+        }
+        .button {
+            margin: 10px 0 20px;
+            padding: 15px 40px;
+            font-size: 18px;
+            border: none;
+            border-radius: 20px;
+            cursor: pointer;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            transition: background-color 0.3s, transform 0.2s;
+            border: 2px solid #ccc; /* 원래 버튼 배경색 유지 */
+            background-clip: padding-box;
+            user-select: none;
+            display: inline-block;
+        }
+        .button:hover,
+        .button.active {
+            background-color: #ccc;
+            transform: scale(1.02);
+            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);
+        }
+        .result-container {
+            margin-top: 20px;
+            font-size: 18px;
+            opacity: 0;
+            transition: opacity 0.5s;
+        }
+        .result-container.show {
+            opacity: 1;
+            transform: translateY(-15px); /* 애니메이션 시작 시 아래로 동그라운드 */
+        }
+        .score {
+            margin-top: 20px;
+            font-size: 18px;
+            user-select: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="game-container">
+        <h1>가위바위보 게임</h1>
+        <button class="button" onclick="playGame('가위')">가위</button>
+        <button class="button" onclick="playGame('바위')">바위</button>
+        <button class="button" onclick="playGame('보')">보</button>
+        <div class="result-container" id="resultContainer">
+            <p id="result"></p>
+        </div>
+        <div class="score">
+            <p>이긴 횟수: <span id="wins">0</span>, 진 횟수: <span id="losses">0</span></p>
+        </div>
+        <button class="button" onclick="initializeScore()">초기화</button>
+    </div>
+    <script>
+        let wins = 0;
+        let losses = 0;
+        let points = 0;
+
+        function getComputerChoice() {
+            const choices = ['가위', '바위', '보'];
+            const randomIndex = Math.floor(Math.random() * choices.length);
+            return choices[randomIndex];
+        }
+
+        function playGame(userChoice) {
+            const computerChoice = getComputerChoice();
+            points += 1;
+
+            clearInterval(resultContainerInterval); // 기존에 실행 중인 타이머 해제
+            resultContainerInterval = setTimeout(() => {
+                const resultContainer = document.getElementById('resultContainer');
+                resultContainer.innerHTML = `<p>You ${userChoice}, Computer ${computerChoice}. ${resultMessage}</p>`;
+                resultContainer.classList.add('show'); // 애니메이션 시작
+
+                setTimeout(() => {
+                    resultContainer.classList.remove('show'); // 애니메이션 종료
+                }, 1000); // 애니메이션 지속 시간
+            }, 100); // 간단한 delay
+        }
+
+        function initializeScore() {
+            wins = 0;
+            losses = 0;
+            points = 0;
+            document.getElementById('wins').textContent = wins;
+            document.getElementById('losses').textContent = losses;
+        }
+    </script>
+</body>
+</html>
